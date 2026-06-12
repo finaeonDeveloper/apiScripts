@@ -6,8 +6,8 @@ Example scripts for requesting data from the [Finaeon API](https://api.finaeon.c
 
 | Path | Contents |
 |---|---|
-| [v1/python](v1/python) | Python example script, Jupyter notebook, and API guide |
-| [v1/R](v1/R) | R example script and API guide |
+| [python](python) | Python example script, Jupyter notebook, and API guide |
+| [R](R) | R example script and API guide |
 
 ## Getting started
 
