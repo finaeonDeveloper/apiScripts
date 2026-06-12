@@ -1,4 +1,4 @@
-# Script for pulling data from the GFD Series API
+# Script for pulling data from the Finaeon Series API
 
 import requests
 import pandas as pd
@@ -10,9 +10,9 @@ import traceback
 # import matplotlib.pyplot as plt
 # plt.close('all')
 
-GFD_API_URL = "https://api.finaeon.com"
-GFD_USERNAME = "tryapi@finaeon.com"
-GFD_PASSWORD = "Test!123"
+Finaeon_API_URL = "https://api.finaeon.com"
+Finaeon_USERNAME = "tryapi@finaeon.com"
+Finaeon_PASSWORD = "Test!123"
 
 def writeJSONToFile(fileSuffix, jsonContents):
     now = datetime.now()
@@ -25,7 +25,7 @@ def writeJSONToFile(fileSuffix, jsonContents):
         json.dump(jsonContents, f)
 
 def call_api(path, parameters):
-    url = GFD_API_URL + path
+    url = Finaeon_API_URL + path
     headers = {'Content-type': 'application/json'}
     print("calling %s" % url)
     print("request body: \r\n %s" % parameters)
@@ -33,19 +33,19 @@ def call_api(path, parameters):
     resp = requests.post(url, headers=headers, data = json.dumps(parameters))
     return resp
 
-def gfd_auth(username, password):
+def finaeon_auth(username, password):
     parameters = {'username': username, 'password': password}
     resp = call_api('/login', parameters=parameters)
 
     #check for unsuccessful API returns
     if resp.status_code != 200:
-        raise ValueError('GFD API request failed with HTTP status code %s' % resp.status_code)
+        raise ValueError('Finaeon API request failed with HTTP status code %s' % resp.status_code)
 
     json_content = resp.json()
-    print("GFD API token recieved at %s" % str(datetime.now()))
+    print("Finaeon API token recieved at %s" % str(datetime.now()))
     return json_content
 
-def gfd_search(token, searchString, **kwargs):
+def finaeon_search(token, searchString, **kwargs):
     page = kwargs.get('page',None)
     pageSize = kwargs.get('pageSize',None)
     searchType = kwargs.get('searchType',None)
@@ -64,14 +64,14 @@ def gfd_search(token, searchString, **kwargs):
     search_data = r.json() 
     return search_data
 
-def gfd_searchbycikcodes(token, cikCodes):
+def finaeon_searchbycikcodes(token, cikCodes):
     parameters = { "token": token, "cikCodes": cikCodes }
     parameters = {key:val for key, val in parameters.items() if val != None}
     r = call_api('/searchbycikcodes', parameters)
     searchbycikcodes_data = r.json() 
     return searchbycikcodes_data
 
-def gfd_series(token, **kwargs):
+def finaeon_series(token, **kwargs):
     seriesId = kwargs.get('seriesId',None)
     seriesName = kwargs.get('seriesName',None)
     splitAdjusted = kwargs.get('splitAdjusted',None)
@@ -112,7 +112,7 @@ def gfd_series(token, **kwargs):
     series_data = r.json() 
     return series_data
 
-def gfd_fundamentals(token, seriesName, period, **kwargs):
+def finaeon_fundamentals(token, seriesName, period, **kwargs):
     startDate = kwargs.get('startDate',None)
     endDate = kwargs.get('endDate',None)
     group = kwargs.get('group',None)
@@ -130,16 +130,16 @@ def gfd_fundamentals(token, seriesName, period, **kwargs):
 
 
 try:
-    # Call the gfd_auth function with credentials
-    authJSON = gfd_auth(GFD_USERNAME, GFD_PASSWORD)
+    # Call the finaeon_auth function with credentials
+    authJSON = finaeon_auth(Finaeon_USERNAME, Finaeon_PASSWORD)
     writeJSONToFile('Login', authJSON)
 
     # Store Token from json response
     token = authJSON['token'].strip('"')
     print("Token:\r\n%s\r\n" % token)
 
-    series_price_data = gfd_series(token, seriesName="IBM", startDate="01/01/2017", closeOnly="true", periodicity="monthly")
-    # series_price_data = gfd_series(token, 
+    series_price_data = finaeon_series(token, seriesName="IBM", startDate="01/01/2017", closeOnly="true", periodicity="monthly")
+    # series_price_data = finaeon_series(token, 
     #                                seriesId="55970", 
     #                                splitAdjusted="true", 
     #                                startDate="01/01/2017", 
@@ -168,13 +168,13 @@ try:
     # plt.show()
 
     # search API call
-    search_info = gfd_search(token, searchString="IBMY", searchType="symbol", baseFilter="startsWith")
-    # search_info = gfd_search(token, searchString="General Motors", searchType="name", baseFilter="contains")
-    # search_info = gfd_search(token, searchString="General Motors", searchType="name", baseFilter="contains", sort="pop", page="3", pageSize="10")
+    search_info = finaeon_search(token, searchString="IBMY", searchType="symbol", baseFilter="startsWith")
+    # search_info = finaeon_search(token, searchString="General Motors", searchType="name", baseFilter="contains")
+    # search_info = finaeon_search(token, searchString="General Motors", searchType="name", baseFilter="contains", sort="pop", page="3", pageSize="10")
     writeJSONToFile('search_info', search_info)
 
     # search by cik API Call
-    search_info_by_cik = gfd_searchbycikcodes(token, cikCodes="0000354950,0000789019")
+    search_info_by_cik = finaeon_searchbycikcodes(token, cikCodes="0000354950,0000789019")
     writeJSONToFile('search_info_by_cik', search_info_by_cik)
 
     #use dictionary comp to build a dict
@@ -185,11 +185,11 @@ try:
 
     # get data by keys
     # looping through each key and building a new dictionary
-    # data_dict = {k:gfd_series(token, seriesName=k, periodicity="monthly", totalReturn="true", startDate="01/01/2020", closeOnly="true") for k in search_dict.keys()}
+    # data_dict = {k:finaeon_series(token, seriesName=k, periodicity="monthly", totalReturn="true", startDate="01/01/2020", closeOnly="true") for k in search_dict.keys()}
     # print(data_dict)
 
-    # fundementals_info = gfd_fundamentals(token, "MSFT", "Annual")
-    fundementals_info = gfd_fundamentals(token, seriesName="MSFT", period="Annual", group="Balance Sheet", startDate="01/01/2010", endDate="12/31/2020")
+    # fundementals_info = finaeon_fundamentals(token, "MSFT", "Annual")
+    fundementals_info = finaeon_fundamentals(token, seriesName="MSFT", period="Annual", group="Balance Sheet", startDate="01/01/2010", endDate="12/31/2020")
     writeJSONToFile('fundementals_info', fundementals_info)
 
 except Exception as e:

@@ -9,9 +9,9 @@ import json
 from datetime import datetime
 import traceback
 
-GFD_API_URL = "https://api.finaeon.com"
+Finaeon_API_URL = "https://api.finaeon.com"
 # Trial API key. Replace with your own API key from the Self-Service Portal.
-GFD_API_KEY = ""
+Finaeon_API_KEY = ""
 
 def writeJSONToFile(fileSuffix, jsonContents):
     now = datetime.now()
@@ -24,19 +24,19 @@ def writeJSONToFile(fileSuffix, jsonContents):
         json.dump(jsonContents, f)
 
 def call_api(path, parameters):
-    url = GFD_API_URL + path
+    url = Finaeon_API_URL + path
     headers = {'Content-Type': 'application/json',
-               'X-Api-Key': GFD_API_KEY}
+               'X-Api-Key': Finaeon_API_KEY}
     print("calling %s" % url)
     print("request body: \r\n %s" % parameters)
     writeJSONToFile(path.strip('/').replace('/', '_') + 'Request', parameters)
     resp = requests.post(url, headers=headers, data=json.dumps(parameters))
     if resp.status_code != 200:
-        raise ValueError('GFD API request to %s failed with HTTP status code %s: %s'
+        raise ValueError('Finaeon API request to %s failed with HTTP status code %s: %s'
                          % (path, resp.status_code, resp.text))
     return resp
 
-def gfd_search(searchString, **kwargs):
+def finaeon_search(searchString, **kwargs):
     page = kwargs.get('page', None)
     pageSize = kwargs.get('pageSize', None)
     searchType = kwargs.get('searchType', None)
@@ -54,13 +54,13 @@ def gfd_search(searchString, **kwargs):
     search_data = r.json()
     return search_data
 
-def gfd_searchbycikcodes(cikCodes):
+def finaeon_searchbycikcodes(cikCodes):
     parameters = {"cikCodes": cikCodes}
     r = call_api('/v2/searchbycikcodes', parameters)
     searchbycikcodes_data = r.json()
     return searchbycikcodes_data
 
-def gfd_series(**kwargs):
+def finaeon_series(**kwargs):
     seriesId = kwargs.get('seriesId', None)
     seriesName = kwargs.get('seriesName', None)
     splitAdjusted = kwargs.get('splitAdjusted', None)
@@ -104,7 +104,7 @@ def gfd_series(**kwargs):
     series_data = r.json()
     return series_data
 
-def gfd_fundamentals(seriesName, period, **kwargs):
+def finaeon_fundamentals(seriesName, period, **kwargs):
     startDate = kwargs.get('startDate', None)
     endDate = kwargs.get('endDate', None)
     group = kwargs.get('group', None)
@@ -122,15 +122,15 @@ def gfd_fundamentals(seriesName, period, **kwargs):
 
 try:
     # series API call
-    series_price_data = gfd_series(seriesName="IBM", startDate="01/01/2019", closeOnly="true", periodicity="monthly")
+    series_price_data = finaeon_series(seriesName="IBM", startDate="01/01/2019", closeOnly="true", periodicity="monthly")
     writeJSONToFile('series_price_data', series_price_data)
     data = pd.DataFrame(series_price_data['price_data'])
     print(data)
 
     # search API call
-    search_info = gfd_search(searchString="MSFT", searchType="symbol", baseFilter="startsWith")
-    # search_info = gfd_search(searchString="General Motors", searchType="name", baseFilter="contains")
-    # search_info = gfd_search(searchString="General Motors", searchType="name", baseFilter="contains", sort="pop", page="3", pageSize="10")
+    search_info = finaeon_search(searchString="MSFT", searchType="symbol", baseFilter="startsWith")
+    # search_info = finaeon_search(searchString="General Motors", searchType="name", baseFilter="contains")
+    # search_info = finaeon_search(searchString="General Motors", searchType="name", baseFilter="contains", sort="pop", page="3", pageSize="10")
     writeJSONToFile('search_info', search_info)
 
     # use dictionary comp to build a dict keyed by symbol
@@ -138,14 +138,14 @@ try:
     print('symbols found:', list(search_dict.keys()))
 
     # search by cik API call
-    search_info_by_cik = gfd_searchbycikcodes(cikCodes="0000354950,0000789019")
+    search_info_by_cik = finaeon_searchbycikcodes(cikCodes="0000354950,0000789019")
     writeJSONToFile('search_info_by_cik', search_info_by_cik)
     print(search_info_by_cik)
 
     # fundamentals API call
     # NOTE: requires a subscription with fundamentals access -
     # the trial API key will receive a 401 response.
-    fundamentals_info = gfd_fundamentals(seriesName="MSFT", period="Annual", group="Balance Sheet", startDate="01/01/2010", endDate="12/31/2020")
+    fundamentals_info = finaeon_fundamentals(seriesName="MSFT", period="Annual", group="Balance Sheet", startDate="01/01/2010", endDate="12/31/2020")
     writeJSONToFile('fundamentals_info', fundamentals_info)
 
 except Exception as e:

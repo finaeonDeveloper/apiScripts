@@ -1,15 +1,15 @@
-# Script for pulling data from the GFD Series API
-# Author: Robert Mohr, GFD Data Scientist
+# Script for pulling data from the Finaeon Series API
+# Author: Robert Mohr, Finaeon Data Scientist
 
 library(httr)
 library(jsonlite)
 library(getPass)
 
 #needed for password masking
-# otherwise password must be passed explicitly to gfd_auth()
+# otherwise password must be passed explicitly to finaeon_auth()
 
 # Function to obtain token
-gfd_auth <- function(username = NULL,
+finaeon_auth <- function(username = NULL,
                      password = NULL) {
 
   if (is.null(username)) {
@@ -18,7 +18,7 @@ gfd_auth <- function(username = NULL,
 
   if (is.null(password)) {
 
-    msg <- "Please enter your GFD password:"
+    msg <- "Please enter your Finaeon password:"
     password <- getPass::getPass(msg = msg)
   }
 
@@ -33,17 +33,17 @@ gfd_auth <- function(username = NULL,
   json_content <- jsonlite::fromJSON(httr::content(resp, as = "text"))
 
   token <- gsub("\"", "", json_content$token)
-  Sys.setenv("GFD_API_TOKEN" = token)
-  message(paste0("GFD API token received at ", Sys.time()))
+  Sys.setenv("Finaeon_API_TOKEN" = token)
+  message(paste0("Finaeon API token received at ", Sys.time()))
 }
 
-# call the gfd_auth function with credentials
+# call the finaeon_auth function with credentials
 
-gfd_auth()
+finaeon_auth()
 
 # Multi Series with Price Data #
 
-# url for access the GFD series API
+# url for access the Finaeon series API
 url <- "https://api.finaeon.com/series/"
 
 # define parameters
@@ -62,7 +62,7 @@ params <- list(seriesname = "IBM",
                corporateactions = "",
                includeaverage = "",
                periodpercentchange = "",
-               token = Sys.getenv("GFD_API_TOKEN"))
+               token = Sys.getenv("Finaeon_API_TOKEN"))
 
 # make call
 resp <- httr::POST(url = url, body = params, encode = "json")
@@ -83,7 +83,7 @@ print(json_content$data_information)
 
 # Search API #
 
-# url for access the GFD search API
+# url for access the Finaeon search API
 url <- "https://api.finaeon.com/search/"
 
 # define parameters
@@ -93,7 +93,7 @@ params <- list(searchstring = "IBM",
                sort = "pop",
                page = "",
                pagesize = "20",
-               token = Sys.getenv("GFD_API_TOKEN"))
+               token = Sys.getenv("Finaeon_API_TOKEN"))
 
 # make call
 resp <- httr::POST(url = url, body = params, encode = "json")

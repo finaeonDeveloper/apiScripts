@@ -34,7 +34,7 @@ Authenticates a user account and returns a bearer token for use in subsequent AP
 
 | Field | Required | Description |
 |---|---|---|
-| `userName` | yes | Username as assigned by GFD |
+| `userName` | yes | Username as assigned by Finaeon |
 | `password` | yes | Password |
 
 ```json
@@ -86,7 +86,7 @@ Searches for and returns series metadata and price data.
 |---|---|---|
 | `token` | yes | Token from `/login` |
 | `seriesName` | yes | Series symbol/ticker; comma-separated for multiple series |
-| `seriesId` | no | Search by GFD series ID instead |
+| `seriesId` | no | Search by Finaeon series ID instead |
 | `startDate` | no | Start date, `MM/DD/YYYY` (default: earliest available) |
 | `endDate` | no | End date, `MM/DD/YYYY` (default: latest available) |
 | `periodicity` | no | `Daily`, `Weekly`, `Monthly`, `Quarterly`, `Annual` (default `Daily`) |

@@ -10,14 +10,14 @@ base_url <- ""
 api_key <- ""
 
 # Helper to POST to a v2 endpoint with the API key header
-gfd_call <- function(path, params) {
+finaeon_call <- function(path, params) {
   resp <- httr::POST(url = paste0(base_url, path),
                      body = params,
                      encode = "json",
                      httr::add_headers(`X-Api-Key` = api_key))
 
   if (httr::status_code(resp) != 200) {
-    stop(paste0("GFD API request to ", path, " failed with HTTP status code ",
+    stop(paste0("Finaeon API request to ", path, " failed with HTTP status code ",
                 httr::status_code(resp), ": ", httr::content(resp, as = "text")))
   }
 
@@ -32,7 +32,7 @@ params <- list(seriesName = "IBM",
                periodicity = "Monthly",
                closeOnly = "true")
 
-json_content <- gfd_call("/v2/series", params)
+json_content <- finaeon_call("/v2/series", params)
 
 # view price_data
 print(json_content$price_data)
@@ -48,7 +48,7 @@ params <- list(searchString = "MSFT",
                sort = "pop",
                pageSize = "20")
 
-json_content <- gfd_call("/v2/search", params)
+json_content <- finaeon_call("/v2/search", params)
 
 # view search_results
 print(json_content$search_results)
@@ -57,7 +57,7 @@ print(json_content$search_results)
 
 params <- list(cikCodes = "0000354950,0000789019")
 
-json_content <- gfd_call("/v2/searchbycikcodes", params)
+json_content <- finaeon_call("/v2/searchbycikcodes", params)
 
 print(json_content)
 
@@ -71,7 +71,7 @@ params <- list(seriesName = "MSFT",
                startDate = "01/01/2010",
                endDate = "12/31/2020")
 
-json_content <- tryCatch(gfd_call("/v2/fundamentals", params),
+json_content <- tryCatch(finaeon_call("/v2/fundamentals", params),
                          error = function(e) message(conditionMessage(e)))
 
 print(json_content$data)

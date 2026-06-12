@@ -104,7 +104,7 @@ Searches for and returns series metadata and price data.
 | Field | Required | Description |
 |---|---|---|
 | `seriesName` | yes | Series symbol/ticker; comma-separated for multiple series |
-| `seriesId` | no | Search by GFD series ID instead |
+| `seriesId` | no | Search by Finaeon series ID instead |
 | `startDate` | no | Start date, `MM/DD/YYYY` (default `01/01/1000`) |
 | `endDate` | no | End date, `MM/DD/YYYY` (default: latest available) |
 | `periodicity` | no | `Daily`, `Weekly`, `Monthly`, `Quarterly`, `Annual` (default `Daily`) |
