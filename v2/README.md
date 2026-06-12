@@ -192,6 +192,5 @@ See [../v1/README.md](../v1/README.md) for the v1 documentation.
 
 ## Resources
 
-- [API Examples (zip)](https://finaeonsiteimages.blob.core.windows.net/docs/GFD_API.zip)
 - [Terms of Service](https://gfdpolicies.blob.core.windows.net/legal/Terms.pdf)
 - Sales / subscription upgrades: [sales@finaeon.com](mailto:sales@finaeon.com)

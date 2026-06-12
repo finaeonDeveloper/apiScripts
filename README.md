@@ -32,5 +32,4 @@ Fundamentals data and pre-2019 stock history require an upgraded subscription â€
 
 ## Resources
 
-- [API Examples (zip)](https://finaeonsiteimages.blob.core.windows.net/docs/GFD_API.zip)
 - [Terms of Service](https://gfdpolicies.blob.core.windows.net/legal/Terms.pdf)

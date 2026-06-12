@@ -159,6 +159,5 @@ Key parameters: `username`, `password`, `searchstring`, `searchtype` (`name`, `s
 
 ## Resources
 
-- [API Examples (zip)](https://finaeonsiteimages.blob.core.windows.net/docs/GFD_API.zip)
 - [Terms of Service](https://gfdpolicies.blob.core.windows.net/legal/Terms.pdf)
 - Sales / subscription upgrades: [sales@finaeon.com](mailto:sales@finaeon.com)
