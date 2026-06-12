@@ -1,6 +1,7 @@
 # Script for pulling data from the Finaeon API v2
 # Authenticates with an API key in the X-Api-Key header.
-# API keys can be managed from the Self-Service Portal (https://app.finaeon.com/).
+# API keys can be managed from the Self-Service Portal:
+# https://app.finaeon.com/
 
 library(httr)
 library(jsonlite)
@@ -17,8 +18,9 @@ finaeon_call <- function(path, params) {
                      httr::add_headers(`X-Api-Key` = api_key))
 
   if (httr::status_code(resp) != 200) {
-    stop(paste0("Finaeon API request to ", path, " failed with HTTP status code ",
-                httr::status_code(resp), ": ", httr::content(resp, as = "text")))
+    stop(paste0("Finaeon API request to ", path,
+                " failed with HTTP status code ", httr::status_code(resp),
+                ": ", httr::content(resp, as = "text")))
   }
 
   jsonlite::fromJSON(httr::content(resp, as = "text"))
