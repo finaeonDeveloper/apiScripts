@@ -5,7 +5,7 @@
 library(httr)
 library(jsonlite)
 
-base_url <- ""
+base_url <- "https://api.finaeon.com"
 # Trial API key. Replace with your own API key from the Self-Service Portal.
 api_key <- ""
 
